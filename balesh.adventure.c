@@ -71,51 +71,88 @@ int turn(char* dir, char* curr) {
   while(strcmp(curr, "Restroom")){
     //cats dir and current room to make the path
     sprintf(path, "./%s/%s", dir, curr);
+    //opens file
     file = fopen(path, "r");
+    //skips the first two words, since they are ROOM NAME
     fscanf(file, "%s", buff);
     fscanf(file, "%s", buff);
+    //gets the rest of the line to be printed as the location
     fgets(buff, 255, (FILE*)file);
+    //prints the location
     printf("\nCURRENT LOCATION:%s", buff);
+    //prints all connections
     printf("POSSIBLE CONNECTIONS:");
+    //repeats for the max of 6 connections
+    //if there are fewer connections we will break sooner
     for(i=0; i<6; i++){
+      //skip the first two words again since they are CONNECTION #:
       fscanf(file, "%s", buff);
       fscanf(file, "%s", buff);
+      //also skip the next char since we don't want leading whitespace in our
+      //connection name
       fscanf(file, "%c", buff);
+      //get the connection name
       fgets(buff, 9, (FILE*)file);
+      //next, the kind of hacked part
+      //it needs to be this way so that we can print out all the connections
+      //comma-delimeted and ending in a period.
+      //It will also allow us to check that we aren't using the last line
+      //if the connection is the first connection, print it by itself
       if(i==0){
+        //puts the buffer containing the connection name into an array of
+        //connections
         sprintf(co[i], "%s", buff);
+        //prints the connection name
         printf("%s", co[i]);
       }
+      //if the connection is not the 6th connection and not the last line of the
+      //file, print the connection with a comma before it and without a period
+      //or newline
       else if(i<5 && 96 < buff[2] && buff[2] < 123) {
         sprintf(co[i], "%s", buff);
         printf(", %s", co[i]);
       }
+      //if the connection is the 6th connection and not the last line of the
+      //file, print the connection with a comma before it and a period and
+      //newline after
       else if(i==5 && 96 < buff[2] && buff[2] < 123) {
         sprintf(co[i], "%s", buff);
         printf(", %s.\n", co[i]);
       }
+      //if the connection is the last line in the file, just print a period and
+      //a newline, and break
       else if(!(96 < buff[2] && buff[2] < 123)) {
         printf(".\n");
         break;
       }
+      //get the last line
       fgets(buff, 255, (FILE*)file);
     }
 
+    //loops until the user gives good input
     do{
+      //prompts the user
       printf("WHERE TO?>");
+      //gets user's reply
       scanf("%s", str);
+      //checks if the reply is valid
       rep = check(co, str);
+      //if the reply is not valid, error
       if(rep == 1){
         printf("\nHUH? I DON’T UNDERSTAND THAT ROOM. TRY AGAIN.\n");
       }
+      //save the reply to the path that the user has taken if the response is
+      //valid
       else{
         sprintf(p, "%s%s\n", p, curr);
         curr = str;
       }
     }while(rep == 1);
+    //iterate the step counter
     steps = steps + 1;
   }
 
+  //print the success message with number of steps and path
   printf("\nYOU HAVE FOUND THE END ROOM. CONGRATULATIONS!\nYOU TOOK %d STEPS. YOUR PATH TO VICTORY WAS:\n%s", steps, p);
 
   free(p);
