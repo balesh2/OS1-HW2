@@ -65,8 +65,11 @@ int turn(char* dir, char* curr) {
   }
   //=================================
 
+  //init steps
   steps = 0;
+  //loops until end room is found
   while(strcmp(curr, "Restroom")){
+    //cats dir and current room to make the path
     sprintf(path, "./%s/%s", dir, curr);
     file = fopen(path, "r");
     fscanf(file, "%s", buff);
