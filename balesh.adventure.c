@@ -67,6 +67,8 @@ int turn(char* dir, char* curr) {
 
   //init steps
   steps = 0;
+  //init p
+  sprintf(p, "Entryway\n");
   //loops until end room is found
   while(strcmp(curr, "Restroom")){
     //cats dir and current room to make the path
@@ -144,8 +146,8 @@ int turn(char* dir, char* curr) {
       //save the reply to the path that the user has taken if the response is
       //valid
       else{
-        sprintf(p, "%s%s\n", p, curr);
         curr = str;
+        sprintf(p, "%s%s\n", p, curr);
       }
     }while(rep == 1);
     //iterate the step counter
